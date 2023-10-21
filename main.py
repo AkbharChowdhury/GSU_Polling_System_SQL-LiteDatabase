@@ -1,19 +1,11 @@
-# Importing from tkinter library
-try:
-    from tkinter.ttk import *
-    import tkinter.messagebox as tm
-    import tkinter as tk
-    import tkinter.ttk as ttk
-    from datetime import datetime
-    from tkinter import *
-    # from abc import abc, abstractmethod  # abstract classes
+from tkinter.ttk import *
+import tkinter.messagebox as tm
+import tkinter as tk
+import tkinter.ttk as ttk
+from tkinter import *
 
-except ImportError:
-    pass
-
+import nav
 from db import Database
-
-# creating an instance of database class
 db = Database()
 
 
@@ -21,13 +13,7 @@ class Navigation:
     def __init__(self, master):
         self.master = master
 
-    """This class is used for navigation purposes using file menu as the primary navgation method
-    This class has two functions.
-    open_window() - used to redirect to another form by class name
-    file menu - used to navigate throughout the system
-    """
-
-    def open_window(self, location):  # Opens a new window based on class location
+    def open_window(self, location):
         self.new_window = Toplevel(self.master)
         self.app = location(self.new_window)
         self.master.withdraw()
@@ -49,21 +35,7 @@ class Navigation:
         menuBar.add_cascade(menu=profile_menu, label="Profile")
         self.master.config(menu=menuBar)
 
-
-class CheckLogin(Navigation):
-
-    def is_logged_in(self):
-        if db.get_student_id() is None:
-            tm.showerror('Login Error', 'Error: You must be logged in to vote')
-            self.open_window(Login)
-
-
-# ------------------------
-# A.2 Login with UID and password class Login
-# ------------------------
-
-
-class Login(Navigation):  # Developed by Akbhar 001084214
+class Login(Navigation):
     def authenticate(self):
         """This function checks if the login button has been clicked"""
         # check login credentials by calling the is_authorized function from Database class
@@ -76,6 +48,8 @@ class Login(Navigation):  # Developed by Akbhar 001084214
 
     def __init__(self, master):
         self.master = master
+        # Navigation(self.master, Candidate, Vote).file_menu()
+
         self.master.title("Student Login Form")
         self.master.geometry("350x120")
         self.frame = Frame(self.master)
@@ -100,22 +74,17 @@ class Login(Navigation):  # Developed by Akbhar 001084214
         self.login_Button.grid(columnspan=2)
 
         self.frame.pack()
+        self.file_menu()
 
-
-# ------------------------
-# A.3 Upload Candidates
-# ------------------------
 
 class Candidate(Navigation):
 
     def __init__(self, master):
 
         self.master = master
-
         self.master.title("Candidate Form")
         self.file_menu()
         self.master.geometry("800x500")
-        # Create widgets/grid
         self.create_widgets()
         # Populate initial list
         self.populate_list()
@@ -231,24 +200,27 @@ class Candidate(Navigation):
         self.frame = Frame(self.master)
 
 
-# ------------------------
-# A.4 Cast Vote
-# ------------------------
-
-
 class Vote(Navigation):
 
     def __init__(self, master):
         self.master = master
+
         self.master.title("Vote Form")
         self.file_menu()
+
         self.master.geometry("700x400")
         # Create widgets/grid
         self.create_widgets()
         # Populate initial list
         self.populate_list()
         # check if user is logged in to vote
-        CheckLogin.is_logged_in(self)
+        # is_logged_in()
+        self.c()
+
+    def c(self):
+        if db.student_id is None:
+            tm.showerror('Login Error', 'Error: You must be logged in to vote')
+            self.open_window(Login)
 
     def create_listbox(self):
         # Candidate list (listbox)
@@ -381,8 +353,8 @@ class Vote(Navigation):
 def main():
     """Initialise the Window and class the home class"""
     root = tk.Tk()
-    Login(root)  # Start up form
-    root.resizable(0, 0)  # set resizable to false
+    Login(root)
+    root.resizable()
     root.mainloop()
 
 

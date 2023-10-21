@@ -11,8 +11,9 @@ class Database:
         self.__cur = self.__conn.cursor()
         self.__student_id = None
 
+
     @property
-    def get_student_id(self):
+    def student_id(self):
         return self.__student_id
 
     def is_authorized(self, username, password):
