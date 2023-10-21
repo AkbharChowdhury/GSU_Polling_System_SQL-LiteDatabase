@@ -3,45 +3,18 @@ import tkinter.messagebox as tm
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import *
-
-import nav
 from db import Database
 db = Database()
+from nav import Navigation
 
-
-class Navigation:
-    def __init__(self, master):
-        self.master = master
-
-    def open_window(self, location):
-        self.new_window = Toplevel(self.master)
-        self.app = location(self.new_window)
-        self.master.withdraw()
-
-    def file_menu(self):  # UI without logging in
-        menuBar = Menu()
-        # Create a pull-down menu for file operations
-        module_menu = Menu(menuBar, tearoff=False)
-        module_menu.add_command(label="View Candidates", command=lambda: self.open_window(Candidate))
-        module_menu.add_command(label="Vote Candidate", command=lambda: self.open_window(Vote))
-        module_menu.add_command(label="View Results", command=lambda: self.open_window(Vote))
-
-        menuBar.add_cascade(menu=module_menu, label="File")
-
-        # Create a pull-down menu for help operations
-        profile_menu = Menu(menuBar, tearoff=False)
-        profile_menu.add_command(label="Logout", command=lambda: self.open_window(Login))
-        profile_menu.add_command(label="Exit", command=lambda: exit())
-        menuBar.add_cascade(menu=profile_menu, label="Profile")
-        self.master.config(menu=menuBar)
-
-class Login(Navigation):
+class Login():
     def authenticate(self):
         """This function checks if the login button has been clicked"""
         # check login credentials by calling the is_authorized function from Database class
 
         if db.is_authorized(self.entry_username.get().strip(), self.entry_password.get()):
-            self.open_window(Candidate)
+            self.nav1.open_window(Candidate)
+            # self.open_window(Candidate)
 
     def enter_key(self, *args):
         self.authenticate()
@@ -74,20 +47,22 @@ class Login(Navigation):
         self.login_Button.grid(columnspan=2)
 
         self.frame.pack()
-        self.file_menu()
+        self.nav1 = Navigation(master, Candidate, Vote)
+        self.nav1.file_menu()
 
 
-class Candidate(Navigation):
+class Candidate():
 
     def __init__(self, master):
 
         self.master = master
         self.master.title("Candidate Form")
-        self.file_menu()
         self.master.geometry("800x500")
         self.create_widgets()
         # Populate initial list
         self.populate_list()
+        self.nav1 = Navigation(master, Candidate, Vote)
+        self.nav1.file_menu()
 
     def candidate_listbox(self):
         # Candidate list (listbox)
@@ -200,13 +175,13 @@ class Candidate(Navigation):
         self.frame = Frame(self.master)
 
 
-class Vote(Navigation):
+class Vote():
 
     def __init__(self, master):
         self.master = master
-
+        self.nav1 = Navigation(master, Candidate, Vote)
+        self.nav1.file_menu()
         self.master.title("Vote Form")
-        self.file_menu()
 
         self.master.geometry("700x400")
         # Create widgets/grid

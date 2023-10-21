@@ -2,12 +2,14 @@ import tkinter as tk
 import tkinter.messagebox as tm
 from tkinter import *
 from tkinter.ttk import *
-class Navigation:
+
+
+class Navigation(Frame):
     def __init__(self, master, can, vote):
+        super().__init__(master)
         self.master = master
         self.candidate = can
         self.vote = vote
-
 
     """This class is used for navigation purposes using file menu as the primary navgation method
     This class has two functions.
