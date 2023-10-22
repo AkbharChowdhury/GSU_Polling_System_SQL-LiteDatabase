@@ -4,24 +4,23 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import *
 from db import Database
+
 db = Database()
 from nav import Navigation
 
-class Login():
+
+class Login:
     def authenticate(self):
         """This function checks if the login button has been clicked"""
-        # check login credentials by calling the is_authorized function from Database class
 
         if db.is_authorized(self.entry_username.get().strip(), self.entry_password.get()):
-            self.nav1.open_window(Candidate)
-            # self.open_window(Candidate)
+            self.nav.open_window(Candidate)
 
     def enter_key(self, *args):
         self.authenticate()
 
     def __init__(self, master):
         self.master = master
-        # Navigation(self.master, Candidate, Vote).file_menu()
 
         self.master.title("Student Login Form")
         self.master.geometry("350x120")
@@ -47,11 +46,11 @@ class Login():
         self.login_Button.grid(columnspan=2)
 
         self.frame.pack()
-        self.nav1 = Navigation(master, Candidate, Vote)
-        self.nav1.file_menu()
+        self.nav = get_nav(master)
+        self.nav.file_menu()
 
 
-class Candidate():
+class Candidate:
 
     def __init__(self, master):
 
@@ -61,8 +60,8 @@ class Candidate():
         self.create_widgets()
         # Populate initial list
         self.populate_list()
-        self.nav1 = Navigation(master, Candidate, Vote)
-        self.nav1.file_menu()
+        self.nav = get_nav(master)
+        self.nav.file_menu()
 
     def candidate_listbox(self):
         # Candidate list (listbox)
@@ -175,12 +174,12 @@ class Candidate():
         self.frame = Frame(self.master)
 
 
-class Vote():
+class Vote:
 
     def __init__(self, master):
         self.master = master
-        self.nav1 = Navigation(master, Candidate, Vote)
-        self.nav1.file_menu()
+        self.nav = get_nav(master)
+        self.nav.file_menu()
         self.master.title("Vote Form")
 
         self.master.geometry("700x400")
@@ -190,12 +189,13 @@ class Vote():
         self.populate_list()
         # check if user is logged in to vote
         # is_logged_in()
-        self.c()
+        self.is_logged_in()
 
-    def c(self):
+    def is_logged_in(self):
+
         if db.student_id is None:
             tm.showerror('Login Error', 'Error: You must be logged in to vote')
-            self.open_window(Login)
+            self.nav.open_window(Login)
 
     def create_listbox(self):
         # Candidate list (listbox)
@@ -325,10 +325,13 @@ class Vote():
         self.populate_list()
 
 
+def get_nav(master):
+    return Navigation(master, Candidate, Vote)
+
+
 def main():
-    """Initialise the Window and class the home class"""
     root = tk.Tk()
-    Login(root)
+    Vote(root)
     root.resizable()
     root.mainloop()
 

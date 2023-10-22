@@ -3,10 +3,9 @@ import tkinter.messagebox as tm
 from tkinter import *
 from tkinter.ttk import *
 
-
-class Navigation(Frame):
+class Navigation:
     def __init__(self, master, can, vote):
-        super().__init__(master)
+        # super().__init__(master)
         self.master = master
         self.candidate = can
         self.vote = vote
